@@ -1,11 +1,24 @@
-import activation as a
-class Perceptron:
-    def __init__(self, n, learning="PERCEPTRON", activation="TANH"):
-        self.n = n
-        self.learning = learning
-        self.activation = activation
+import activation
+import utility.vector_utils as vutil
 
-    def train(self, train_data):
+
+class Perceptron:
+
+    def __init__(self, n, epsilon=0.2, learning="PERCEPTRON", activation = "THRESHOLD"):
+        self.n = n
+        self.learning = learning.upper()
+        self.activation = activation.upper()
+        self.epsilon = epsilon
+
+        # Activation function object selection
+        if self.activation == "THRESHOLD":
+            self.activation_fn = activation.threshold_activation
+        elif self.activation == "TANH":
+            self.activation_fn = activation.tanh_activation
+        elif self.activation == "RELU":
+            self.activation_fn = activation.relu_activation
+
+    def train(self, train_data, alpha=0):
         """
         Trains the perceptron by using the learning and activation specified in the model.
         :param train_data: array of training data vectors. Each vector of length 'n'
@@ -13,24 +26,66 @@ class Perceptron:
         """
         print("Training method")
 
-    def test(self, observation):
+        # Training method selection
+        if self.learning == "PERCEPTRON":
+            self._perceptron_train(train_data)
+        else:
+            self._winnow_train()
+
+    def test(self, observation, activation_fn):
+
         """
         Tests the given observation against the perceptron model and returns the activation result
         :param observation: test vector of length 'n'
         :return: activation function result
         """
         print("Testing method")
+        stout_format = "{}:{}:{}:{}"
+        total_error = 0
+        for test_data in observation:
+            prediction = self.activation_fn(vutil.dot_product(test_data, self.w), self.theta)
+            actual = activation.ground_truth(test_data)  # Should be replaced with actual ground truth function
+            error = abs(actual-prediction)
+            total_error += error
+            print(stout_format.format(",".join(test_data), prediction, actual, error))
 
-    def _winnow_update(self):
+        average_error = total_error*1.0/len(test_data)
+        print("Average Error : ", average_error)
+        print("Epsilon : ", self)
+        if average_error <= self.epsilon:
+            print("TRAINING SUCCEEDED")
+        else:
+            print("TRAINING FAILED")
+
+    def _perceptron_train(self, train_data):
+
+        # Initialization
+        self.w = [0]*self.n
+        self.theta = 0
+        stout_format = "{}:{}:[{}]"
+        for data in train_data:
+            prediction = self.activation_fn(vutil.dot_product(data, self.w), self.theta)
+            actual = activation.ground_truth(data) # Should be replaced with actual ground truth function
+
+            if actual == 0 and prediction == 1:
+                # False Positive
+                self.w = vutil.vector_difference(self.w, data)
+                self.theta += 1
+                print(stout_format.format(",".join(data), prediction, "update"))
+            elif actual == 1 and prediction == 0:
+                # False Negative
+                self.w = vutil.vector_sum(self.w, data)
+                self.theta -= 1
+                print(stout_format.format(",".join(data), prediction, "update"))
+            else:
+                # Correct prediction
+                print(stout_format.format(",".join(data), prediction, "no update"))
+
+
+
+
+    def _winnow_train(self):
         """
         Winnow update rule implementation
         :return: Updated weight vector and theta
         """
-
-    def _perceptron_update(self):
-        """
-        Perceptron update rule implementation
-        :return: Updated weight vector and theta
-        """
-
-
