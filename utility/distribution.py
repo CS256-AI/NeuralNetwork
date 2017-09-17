@@ -35,10 +35,10 @@ def spherical_dist_generator(n, count):
             input_1.append(term)
             #Calculate the sum of squares of all terms to normalize the input
             row_sqrt += term ** 2
-            print("term {}-->{}".format(j, term))
-        print("Row squared sum --> {}".format(row_sqrt))
+            #print("term {}-->{}".format(j, term))
+        #print("Row squared sum --> {}".format(row_sqrt))
         row_sqrt = row_sqrt ** (1/2.0)
-        print("Row sq root sum --> {}".format(row_sqrt))
+        #print("Row sq root sum --> {}".format(row_sqrt))
 
         #Normalize the vector
         for j in range(0, n):
@@ -47,4 +47,12 @@ def spherical_dist_generator(n, count):
         input_data.append(input_1)
     return input_data
 
-print (spherical_dist_generator(3, 10))
+def test():
+    print("** Spherical distribution **")
+    print (spherical_dist_generator(3, 10))
+    print("** Uniform boolean distribution **")
+    print (uniform_dist_generator(3, 10))
+
+#test the distribution functions
+test()
+
