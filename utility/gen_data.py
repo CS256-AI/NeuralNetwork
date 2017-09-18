@@ -45,7 +45,7 @@ def parse_ground_file(file_name):
     line = in_file.readline().strip()
     # print("Input line 1 --> {}".format(line))
     if line == 'NBF':
-        print("Parsing nested boolean function")
+        #print("Parsing nested boolean function")
         func_type = 'NBF'
         line = in_file.readline().strip()
         # print("Input line 2 --> {}".format(line))
@@ -55,13 +55,13 @@ def parse_ground_file(file_name):
             pattern_operands = re.compile('\s*([+|-]\d+)\s*')
             pattern_operators = re.compile('\s*(AND|OR)\s*')
             operands = re.findall(pattern_operands, func)
-            print("operands = {}".format(operands))
+            #print("operands = {}".format(operands))
             operators = re.findall(pattern_operators, func)
-            print("operators = {}".format(operators))
+            #print("operators = {}".format(operators))
             result = (func_type, operands, operators)
-            print("result = {}".format(result))
+            #print("result = {}".format(result))
     elif line == 'TF':
-        print("Parsing threshold function")
+        #print("Parsing threshold function")
         func_type = 'TF'
         line = in_file.readline()
         # print("Input line 2 --> {}".format(line))
@@ -81,7 +81,7 @@ def parse_ground_file(file_name):
                     terms[i] = float(terms[i])
                 # print("terms = {}".format(terms))
                 result = (func_type, terms, threshold)
-                print("ground funciton(function type, terms, threshold) = {}".format(result))
+                # print("ground funciton(function type, terms, threshold) = {}".format(result))
                 return result
             else:
                 result = None
@@ -119,7 +119,7 @@ def generate_data(ground_file, count, dist):
             for i in range(count):
                 input_x = dist_fn(no_inputs)
                 data.append((input_x, cal_thresh_fn(input_x, terms, threshold)))
-            print("Data : {}".format(data))
+            # print("Data : {}".format(data))
             return data
         else:
             sys.exit('NOT PARCEABLE')
@@ -128,7 +128,7 @@ def generate_data(ground_file, count, dist):
 # print(bool_dist_generator(3))
 # print(spherical_dist_generator(3))
 # parse_ground_file('sample_function_2')
-generate_data('sample_function_2', 10, 'bool')
+generate_data('D:\SJSU\Fall17\CS256\NeuralNetwork\sample_function_2', 10, 'bool')
 
 
 

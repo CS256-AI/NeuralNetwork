@@ -21,5 +21,16 @@ def vector_difference(x, y):
     if len(x) == len(y):
         for i in range(len(x)):
             vdiff[i] = x[i] - y[i]
-
     return vdiff
+
+
+def vector_product(x, y):
+    vprod = [0]*len(x)
+    if len(x) == len(y):
+        for i in range(len(x)):
+            vprod[i] = x[i] * y[i]
+
+    return vprod
+
+def vector_to_string(x):
+    return ",".join([str(i) for i in x])
