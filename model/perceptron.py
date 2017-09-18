@@ -18,10 +18,12 @@ class Perceptron:
         elif self.activation == "RELU":
             self.activation_fn = activation.relu_activation
 
-    def train(self, train_data, alpha=0):
+    def train(self, train_data, theta=0, alpha=0):
         """
         Trains the perceptron by using the learning and activation specified in the model.
         :param train_data: array of training data vectors. Each vector of length 'n'
+        :param theta: required for winnow training method
+        :param alpha: required for winnow training method
         :return: weight vector and theta.
         """
         print("Training method")
@@ -30,9 +32,9 @@ class Perceptron:
         if self.learning == "PERCEPTRON":
             self._perceptron_train(train_data)
         else:
-            self._winnow_train()
+            self._winnow_train(train_data, theta, alpha)
 
-    def test(self, observation, activation_fn):
+    def test(self, observation):
 
         """
         Tests the given observation against the perceptron model and returns the activation result
@@ -49,7 +51,7 @@ class Perceptron:
             total_error += error
             print(stout_format.format(",".join(test_data), prediction, actual, error))
 
-        average_error = total_error*1.0/len(test_data)
+        average_error = (total_error*1.0)/len(test_data)
         print("Average Error : ", average_error)
         print("Epsilon : ", self)
         if average_error <= self.epsilon:
@@ -63,9 +65,37 @@ class Perceptron:
         self.w = [0]*self.n
         self.theta = 0
         stout_format = "{}:{}:[{}]"
+        for x, actual in train_data:
+            prediction = self.activation_fn(vutil.dot_product(x, self.w), self.theta)
+
+            if actual == 0 and prediction == 1:
+                # False Positive
+                self.w = vutil.vector_difference(self.w, x)
+                self.theta += 1
+                print(stout_format.format(",".join(x), prediction, "update"))
+            elif actual == 1 and prediction == 0:
+                # False Negative
+                self.w = vutil.vector_sum(self.w, x)
+                self.theta -= 1
+                print(stout_format.format(",".join(x), prediction, "update"))
+            else:
+                # Correct prediction
+                print(stout_format.format(",".join(x), prediction, "no update"))
+
+
+    def _winnow_train(self, train_data, theta, alpha):
+        """
+        Winnow update rule implementation
+        :return: Updated weight vector and theta
+        """
+        # Initialization
+        self.w = [0.2] * self.n
+        self.theta = theta
+        self.alpha = alpha
+        stout_format = "{}:{}:[{}]"
         for data in train_data:
             prediction = self.activation_fn(vutil.dot_product(data, self.w), self.theta)
-            actual = activation.ground_truth(data) # Should be replaced with actual ground truth function
+            actual = activation.ground_truth(data)  # Should be replaced with actual ground truth function
 
             if actual == 0 and prediction == 1:
                 # False Positive
@@ -80,12 +110,3 @@ class Perceptron:
             else:
                 # Correct prediction
                 print(stout_format.format(",".join(data), prediction, "no update"))
-
-
-
-
-    def _winnow_train(self):
-        """
-        Winnow update rule implementation
-        :return: Updated weight vector and theta
-        """
