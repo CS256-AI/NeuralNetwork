@@ -1,7 +1,7 @@
 def dot_product(x, y):
     product = 0
     if len(x) == len(y):
-        for i in range(x):
+        for i in range(len(x)):
             product += x[i] * y[i]
 
     return product
