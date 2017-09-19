@@ -55,6 +55,8 @@ def parse_ground_file(file_name):
         #print("Parsing nested boolean function")
         func_type = 'NBF'
         line = in_file.readline().strip()
+        if not line:
+            return(func_type, None, None)
         # print("Input line 2 --> {}".format(line))
         func = re.search(re.compile('([+|-]\d+(\s+(AND|OR)\s+[+|-]\d+)*)?'),line).group(0)
         # print("Ground function -->{}".format(func))
@@ -147,10 +149,10 @@ def cal_nbf_fn(input_x, operands, operators):
     print("input_x = {}".format(input_x))
     no_terms = len(operands)
     expression = '(' * (no_terms-1)
-    print("no_terms {}".format(no_terms))
+    #print("no_terms {}".format(no_terms))
     for i in range(no_terms):
         print("i = {}".format(i))
-        print("operands[i] = {}".format(operands[i]))
+        #print("operands[i] = {}".format(operands[i]))
         if operands[i] == 0:
             sys.exit("NOT PARCEABLE")
         if operands[i] > 0:
@@ -164,8 +166,8 @@ def cal_nbf_fn(input_x, operands, operators):
             expression += " " + str(operators[i]).lower() + " "
         else:
             expression += str(term) + ")"
-    print("expression --> {}".format(expression))
-    print("result -- {}".format(eval(expression)))
+    #print("expression --> {}".format(expression))
+    #print("result -- {}".format(eval(expression)))
     return eval(expression)
 
 def generate_data(ground_file, count, dist):
@@ -183,12 +185,20 @@ def generate_data(ground_file, count, dist):
         if type == 'NBF':
             print('parsed nbf')
             type, operands, operators = result
-            no_inputs = find_no_terms_nbf(operands)
-            print("no of inputs = {}".format(no_inputs))
-            for i in range(count):
-                # Ignore the distribution value
-                input_x = bool_dist_generator(no_inputs)
-                data.append((input_x, cal_nbf_fn(input_x, operands, operators)))
+            if not operands and not operators:
+                #Asssuming 5 terms in case of always 0 function
+                no_inputs = 5
+                for i in range(count):
+                    # Ignore the distribution value
+                    input_x = bool_dist_generator(no_inputs)
+                    data.append((input_x, 0))
+            else:
+                no_inputs = find_no_terms_nbf(operands)
+                print("no of inputs = {}".format(no_inputs))
+                for i in range(count):
+                    # Ignore the distribution value
+                    input_x = bool_dist_generator(no_inputs)
+                    data.append((input_x, cal_nbf_fn(input_x, operands, operators)))
             print("Data : {}".format(data))
             return data
         elif type == 'TF':
