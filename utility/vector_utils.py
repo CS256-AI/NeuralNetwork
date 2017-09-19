@@ -32,5 +32,8 @@ def vector_product(x, y):
 
     return vprod
 
+
 def vector_to_string(x):
     return ",".join([str(i) for i in x])
+
+

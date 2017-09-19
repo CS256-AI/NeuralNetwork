@@ -70,12 +70,12 @@ class Perceptron:
         for x, actual in train_data:
             prediction = self.activation_fn(vutil.dot_product(x, self.w), self.theta)
 
-            if actual == 0 and prediction == 1:
+            if (prediction - actual) > 0:
                 # False Positive
                 self.w = vutil.vector_difference(self.w, x)
                 self.theta += 1
                 print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
-            elif actual == 1 and prediction == 0:
+            elif (prediction - actual) < 0:
                 # False Negative
                 self.w = vutil.vector_sum(self.w, x)
                 self.theta -= 1
@@ -100,12 +100,12 @@ class Perceptron:
             for x, actual in train_data:
                 prediction = self.activation_fn(vutil.dot_product(x, self.w), self.theta)
 
-                if actual == 0 and prediction == 1:
+                if (prediction - actual) > 0:
                     # False Positive
                     negative_exp = [self.alpha ** -xi for xi in x]
                     self.w = vutil.vector_product(self.w, negative_exp)
                     print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
-                elif actual == 1 and prediction == 0:
+                elif (prediction - actual) < 0:
                     # False Negative
                     negative_exp = [self.alpha ** xi for xi in x]
                     self.w = vutil.vector_product(self.w, negative_exp)
@@ -114,3 +114,5 @@ class Perceptron:
                     # Correct prediction
                     print(stout_format.format(vutil.vector_to_string(x), actual, "no update"))
                 #print("Summary of iteration:\n Weight: {}\n Theta{}\n".format(vutil.vector_to_string(self.w), self.theta))
+
+
