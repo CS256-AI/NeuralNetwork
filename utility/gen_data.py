@@ -187,7 +187,7 @@ def generate_data(ground_file, count, dist):
             type, operands, operators = result
             if not operands and not operators:
                 #Asssuming 5 terms in case of always 0 function
-                no_inputs = 5
+                no_inputs = 3
                 for i in range(count):
                     # Ignore the distribution value
                     input_x = bool_dist_generator(no_inputs)
