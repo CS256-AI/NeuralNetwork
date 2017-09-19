@@ -6,7 +6,7 @@ def tanh_activation(val, theta):
     :param val: activation parameter
     :return: Boolean activation result.
     """
-    return math.tanh(val-theta)
+    return threshold_activation(math.tanh(val-theta), 0)
 
 
 def relu_activation(val, theta):
@@ -15,7 +15,7 @@ def relu_activation(val, theta):
     :param val: activation parameter
     :return: Boolean activation result.
     """
-    return max(0, val-theta)
+    return threshold_activation(max(0, val-theta), 0.2)
 
 
 def threshold_activation(val, theta):
@@ -26,13 +26,6 @@ def threshold_activation(val, theta):
     :return: Boolean activation result.
     """
     if val >= theta:
-        return 1
-    else:
-        return 0
-
-
-def ground_truth(x):
-    if (x[0] and x[2]) or x[1]:
         return 1
     else:
         return 0
