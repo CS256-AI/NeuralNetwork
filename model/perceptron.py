@@ -5,7 +5,7 @@ from utility import constants
 
 class Perceptron:
 
-    def __init__(self, n, learning=constants.LRNG_PERCEPTRON, activation=constants.ACTV_THRESHOLD, epsilon=0.2, alpha=0, theta=0):
+    def __init__(self, n, learning=constants.PERCEPTRON, activation=constants.THRESHOLD, epsilon=0.2, alpha=0, theta=0):
         self.n = n
         self.learning = learning.upper()
         self.activation = activation.upper()
@@ -14,11 +14,11 @@ class Perceptron:
         self.theta = theta
 
         # Activation function object selection
-        if self.activation == constants.ACTV_THRESHOLD:
+        if self.activation == constants.THRESHOLD:
             self.activation_fn = a.threshold_activation
-        elif self.activation == constants.ACTV_TANH:
+        elif self.activation == constants.TANH:
             self.activation_fn = a.tanh_activation
-        elif self.activation == constants.ACTV_RELU:
+        elif self.activation == constants.RELU:
             self.activation_fn = a.relu_activation
 
     def train(self, train_data):
@@ -32,9 +32,9 @@ class Perceptron:
         print(" ===Training=== ")
 
         # Training method selection
-        if self.learning == constants.LRNG_PERCEPTRON:
+        if self.learning == constants.PERCEPTRON:
             self._perceptron_train(train_data)
-        elif self.learning == constants.LRNG_WINNOW:
+        elif self.learning == constants.WINNOW:
             self._winnow_train(train_data)
 
     def test(self, observation):
@@ -74,15 +74,17 @@ class Perceptron:
                 # False Positive
                 self.w = vutil.vector_difference(self.w, x)
                 self.theta += 1
-                print(stout_format.format(vutil.vector_to_string(x), prediction, "update"))
+                print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
             elif actual == 1 and prediction == 0:
                 # False Negative
                 self.w = vutil.vector_sum(self.w, x)
                 self.theta -= 1
-                print(stout_format.format(vutil.vector_to_string(x), prediction, "update"))
+                print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
             else:
                 # Correct prediction
-                print(stout_format.format(vutil.vector_to_string(x), prediction, "no update"))
+                print(stout_format.format(vutil.vector_to_string(x),actual, "no update"))
+
+            #print("Summary of iteration:\n Weight: {}\n Theta{}\n".format(vutil.vector_to_string(self.w), self.theta))
 
     def _winnow_train(self, train_data):
         """
@@ -90,8 +92,8 @@ class Perceptron:
         :return: Updated weight vector and theta
         """
         # Initialization
-        self.w = [0.2] * self.n
-        if self.theta < 1 or self.alpha < 1:
+        self.w = [1] * self.n
+        if self.theta < 0 or self.alpha < 1:
             print("Alpha and Theta values should be greater than 1 for winnow training")
         else:
             stout_format = "{}:{}:[{}]"
@@ -102,12 +104,13 @@ class Perceptron:
                     # False Positive
                     negative_exp = [self.alpha ** -xi for xi in x]
                     self.w = vutil.vector_product(self.w, negative_exp)
-                    print(stout_format.format(vutil.vector_to_string(x), prediction, "update"))
+                    print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
                 elif actual == 1 and prediction == 0:
                     # False Negative
                     negative_exp = [self.alpha ** xi for xi in x]
                     self.w = vutil.vector_product(self.w, negative_exp)
-                    print(stout_format.format(vutil.vector_to_string(x), prediction, "update"))
+                    print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
                 else:
                     # Correct prediction
-                    print(stout_format.format(vutil.vector_to_string(x), prediction, "no update"))
+                    print(stout_format.format(vutil.vector_to_string(x), actual, "no update"))
+                #print("Summary of iteration:\n Weight: {}\n Theta{}\n".format(vutil.vector_to_string(self.w), self.theta))

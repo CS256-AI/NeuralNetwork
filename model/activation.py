@@ -6,7 +6,7 @@ def tanh_activation(val, theta):
     :param val: activation parameter
     :return: Boolean activation result.
     """
-    return (2.0/(1 + math.exp(-2*val))) - 1
+    return math.tanh(val-theta)
 
 
 def relu_activation(val, theta):
@@ -15,10 +15,7 @@ def relu_activation(val, theta):
     :param val: activation parameter
     :return: Boolean activation result.
     """
-    if val > 0:
-        return 1
-    else:
-        return 0
+    return max(0, val-theta)
 
 
 def threshold_activation(val, theta):
