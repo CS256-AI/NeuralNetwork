@@ -14,7 +14,7 @@ else:
     train_data = gen_data.generate_data(ground_file, num_train, distribution)
     test_data = gen_data.generate_data(ground_file, num_test, distribution)
 
-    perceptron = Perceptron(3, activation=activation.upper(), learning=learning.upper(),
+    perceptron = Perceptron(len(train_data[0]), activation=activation.upper(), learning=learning.upper(),
                             epsilon=epsilon, alpha=1.5, theta=1.5)
     perceptron.train(train_data)
     perceptron.test(test_data)
