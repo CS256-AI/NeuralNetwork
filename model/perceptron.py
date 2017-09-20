@@ -25,8 +25,6 @@ class Perceptron:
         """
         Trains the perceptron by using the learning and activation specified in the model.
         :param train_data: array of training data vectors. Each vector of length 'n'
-        :param theta: required for winnow training method
-        :param alpha: required for winnow training method
         :return: weight vector and theta.
         """
         print(" ===Training=== ")
@@ -82,7 +80,7 @@ class Perceptron:
                 print(stout_format.format(vutil.vector_to_string(x), actual, "update"))
             else:
                 # Correct prediction
-                print(stout_format.format(vutil.vector_to_string(x),actual, "no update"))
+                print(stout_format.format(vutil.vector_to_string(x), actual, "no update"))
 
             #print("Summary of iteration:\n Weight: {}\n Theta{}\n".format(vutil.vector_to_string(self.w), self.theta))
 
