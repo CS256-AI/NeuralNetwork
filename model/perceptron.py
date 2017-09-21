@@ -82,7 +82,7 @@ class Perceptron:
                 # Correct prediction
                 print(stout_format.format(vutil.vector_to_string(x), actual, "no update"))
 
-            #print("Summary of iteration:\n Weight: {}\n Theta{}\n".format(vutil.vector_to_string(self.w), self.theta))
+            # print("Summary of iteration:\n Weight: {}\n Theta{}\n".format(vutil.vector_to_string(self.w), self.theta))
 
     def _winnow_train(self, train_data):
         """
