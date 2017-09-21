@@ -224,7 +224,7 @@ def generate_data(ground_file, count, dist):
 # parse_ground_file('sample_function_2')
 
 
-generate_data('sample_function', 10, 'bool')
+# generate_data('sample_function', 10, 'bool')
 
 
 
